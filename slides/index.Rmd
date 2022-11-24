@@ -106,16 +106,17 @@ $$\\[2in]$$
 
 .pull-left[
 
+
 - **.bg-purple_light[Diapositivas]** del curso:
-<https://dadosdelaplace.github.io/teaching/bioestad/slides>
+<https://dadosdelaplace.github.io/teaching-biostats/slides>
 
 - **.bg-red_light[Evaluación]** de la asignatura
-<https://github.com/dadosdelaplace/teaching/tree/main/bioestad/eval>
+<https://github.com/dadosdelaplace/teaching-biostats/tree/main/eval>
 
 - **.bg-yellow[Scripts]** de la asignatura
-<https://github.com/dadosdelaplace/teaching/tree/main/bioestad/scripts>
+<https://github.com/dadosdelaplace/teaching-biostats/tree/main/scripts>
 
-- **.bg-orange[Bibliografía]**: <https://github.com/dadosdelaplace/teaching/tree/main/bioestad/biblio>
+- **.bg-orange[Bibliografía]**: <https://github.com/dadosdelaplace/teaching-biostats/tree/main/biblio>
 
 &nbsp;
 
