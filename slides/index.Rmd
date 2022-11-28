@@ -260,7 +260,6 @@ class: inverse center middle
 
 #### [CLASE 10: repaso](#clase-10)
 
-#### [CLASE 11: factores, importar/exportar](#clase-11)
 
 ]
 
@@ -274,6 +273,7 @@ class: inverse center middle
 
 .pull-left[
 
+#### [CLASE 11: factores, importar/exportar](#clase-11)
 
 #### [CLASE 12: cruzando tablas y más funciones](#clase-12)
 
@@ -281,24 +281,20 @@ class: inverse center middle
 
 #### [CLASE 14: introducción a ggplot](#clase-14)
 
-#### [CLASE 15: profundizando en ggplot](#clase-15)
+#### [CLASE 15: profundizando en ggplot I](#clase-15)
 
-#### [CLASE 16: ggplot fetén](#...)
-
-#### [ENTREGA III (clase 17)](#entrega-III)
 
 ]
 
 .pull-right[
 
+#### [CLASE 16: profundizando en ggplot II](#clase-16)
 
-#### [CLASE 18: introducción a Stata](#...)
+#### [ENTREGA III (clase 17)](#clase-17)
 
-#### [CLASE 19: ...](#...)
+#### [CLASE 18: introducción a Stata](#clase-18)
 
-#### [CLASE 20: ...](#...)
-
-#### [CLASE 21: ...](#...)
+#### [CLASE 19: uso básico de Stata](#clase-19)
 
 ]
 
@@ -9728,7 +9724,7 @@ name: google-data
 
 Otra opción disponible (sobre todo si trabajamos con otras personas que trabajan en Google Drive) es **.bg-purple_light[importar desde una hoja de cálculo Google Drive]**, haciendo uso de `read_sheet()` del paquete `{googlesheets4}` (os pedirá un permiso de tidyverse para interactuar con vuestro drive)
 
-```{r}
+```{r eval = FALSE}
 library(googlesheets4)
 google_sheet <- read_sheet("https://docs.google.com/spreadsheets/d/1AxHm5qndAQXT77HUjbB7h4rbUVe48Doe1iNIxwk05L4/edit?usp=sharing")
 google_sheet
@@ -13993,20 +13989,1053 @@ ggplotly(gg, tooltip = c("text"))
 
 ---
 
-florence - hiking
-heat map
+class: inverse center middle
+name: clase-16
 
-boxplot y alternativas: histograma y densidades, violín, etc
+# CLASE 16: profundizando en ggplot II
 
-dumbell
-flujo (acumulativos) area chart
-flujo de partidos
-tablas
-circulos climáticos y florence (coordenadas polares)
-¿mapas?
+&nbsp;
+
+### [Diagramas polares](#polar-charts)
+
+### [Histogramas](#histograma)
+
+### [Densidades](#densidad)
+
+### [Boxplots y alternativas](#box-plot)
 
 ---
 
+name: polar-charts
+
+# Coordenadas .orange[POLARES]
+
+Los gráficos no tienen porque estar en torno a **.bg-purple_light[coordenadas cartesianas]**, y a veces es habitual presentar datos **estacionales** en **.bg-purple_light[coordenadas polares]**
+
+Vamos a intentar replicar el famoso gráfico de rosa o diagrama de área polar de Florence Nightingale, cargando los datos de `{HistData}`
+
+```{r}
+library(HistData)
+Nightingale
+```
+
+---
+
+# Coordenadas .orange[POLARES]
+
+
+```{r echo = FALSE, out.width = "53%", fig.align = "center"}
+library(sysfonts)
+library(showtext)
+font_add_google(family = "Cinzel Decorative",
+                name = "Cinzel Decorative")
+font_add_google(family = "Roboto",
+                name = "Roboto")
+showtext_auto()
+theme_set(theme_minimal(base_family = "Cinzel Decorative"))
+theme_update(axis.title.y = element_blank(),
+             axis.text.y = element_blank(),
+             axis.ticks.y = element_blank(),
+             axis.title.x = element_text(size = 9, face = "bold"),
+             axis.text.x = element_text(size = 4, face = "bold"),
+             legend.position = "bottom",
+             legend.title = element_text(size = 9, face = "bold"),
+             plot.title =
+               element_text(hjust = 0.5, face = "bold", size = 21),
+             plot.subtitle = element_text(hjust = 0.5, size = 13),
+             plot.caption = element_text(size = 7),
+             plot.background = element_rect(fill = alpha("#F4DA47", 0.1)))
+datos <-
+  Nightingale %>% 
+  select(Date, Month, Year, contains("rate")) %>%
+    pivot_longer(cols = contains("rate"),
+                 names_to = "causa",
+                 values_to = "tasa") %>%
+    rename(fecha = Date, mes = Month, year = Year) %>%
+    mutate(causa = str_remove_all(causa, ".rate"),
+           causa =
+               case_when(causa == "Disease" ~ "infecciosas",
+                         causa == "Wounds" ~ "heridas",
+                         TRUE ~ "otras")) %>%
+    mutate(periodo =
+               ifelse(fecha >= "1855-04-01",
+                      "Abril 1855 - Marzo 1856",
+                      "Abril 1854 - Marzo 1855"),
+           periodo =
+               factor(periodo,
+                      levels = c("Abril 1854 - Marzo 1855",
+                                 "Abril 1855 - Marzo 1856"),
+                      ordered = TRUE))
+ggplot(datos, aes(x = mes, y = tasa, fill = causa)) + 
+  geom_col(alpha = 0.85, width = 1) +
+  scale_fill_manual(values = c("#e3aeae", "#a5acb0", "#594b4a")) +
+  coord_polar() +
+  scale_y_sqrt() +
+  scale_x_discrete(labels =
+                     c("JULY", "AUGUST", "SEPTEMBER",
+                       "OCTOBER", "NOVEMBER", "DECEMBER",
+                       "JANUARY", "FEBRUARY", "MARCH",
+                       "APRIL", "MAY", "JUNE")) +
+  facet_wrap(~periodo) +
+  labs(fill = "Causas",
+       title = "Diagrama de causas de mortalidad",
+       subtitle = "Periodo: Abril 1854 - Marzo 1855",
+       caption = "Autor: J. Álvarez Liébana | Data: {HistData}")
+```
+
+---
+
+# Coordenadas .orange[POLARES]
+
+Pero antes...replica este gráfico de barras (sin tocar tema). Prepara los datos como consideres.
+
+```{r  echo = FALSE, out.width = "43%", fig.align = "center"}
+theme_set(theme_grey())
+ggplot(datos, aes(x = mes, y = tasa, fill = causa)) + 
+  geom_col(alpha = 0.85) +
+  scale_fill_manual(values = c("#e3aeae", "#a5acb0", "#594b4a")) +
+  labs(fill = "Causas",
+       title = "Diagrama de causas de mortalidad",
+       subtitle = "Periodos: Abril 1854 - Marzo 1855",
+       caption = "Autor: J. Álvarez Liébana | Data: {HistData}")
+
+```
+
+---
+
+# Coordenadas .orange[POLARES]
+
+* **.bg-purple_light[Convierte a tibble]** los datos
+
+*  Selecciona solo las variables de **.bg-purple_light[fecha]** (también mes y año) y las **.bg-purple_light[tasas relativas]** (contienen "rate" en el nombre).
+
+
+```{r}
+datos <-
+  as_tibble(Nightingale) %>% 
+  select(Date, Month, Year, contains("rate"))
+datos
+```
+
+
+---
+
+# Coordenadas .orange[POLARES]
+
+* Prepara los datos y convierte a **.bg-purple_light[tidy data]**. Renombra además `Date` como `fecha`, `Month` como `month` y `Year` como `year`
+
+
+```{r}
+datos <-
+  datos %>%
+  pivot_longer(cols = contains("rate"),
+               names_to = "causa",
+               values_to = "tasa") %>%
+  rename(fecha = Date, mes = Month, year = Year) 
+datos
+```
+
+
+---
+
+# Coordenadas .orange[POLARES]
+
+*  Vamos **.bg-purple_light[eliminar el sufijo ".rate"]** de las causas, y traducirlas a castellano.
+
+
+```{r}
+datos <-
+  datos %>%
+  mutate(causa = str_remove_all(causa, ".rate"),
+         causa = case_when(causa == "Disease" ~ "infecciosas",
+                           causa == "Wounds" ~ "heridas",
+                           TRUE ~ "otras"))
+datos
+```
+
+---
+
+# Coordenadas .orange[POLARES]
+
+* **.bg-purple_light[Crea una nueva variable]** llamada `periodo` que nos dirá si el dato es antes del 1 de marzo de 1855 o después (antes y después de las intervenciones llevadas a cabo por Nightingale). Tras crearla, conviértela a factor de la manera más adecuada.
+
+
+```{r}
+datos <-
+  datos %>%
+  mutate(periodo =
+           ifelse(fecha >= "1855-04-01",
+                  "Abril 1855 - Marzo 1856", "Abril 1854 - Marzo 1855"),
+         periodo =
+           factor(periodo,
+                  levels = c("Abril 1854 - Marzo 1855", "Abril 1855 - Marzo 1856"),
+                  ordered = TRUE))
+datos
+```
+
+
+---
+
+# Coordenadas .orange[POLARES]
+
+.pull-left[
+
+
+La manera más inmediata de representar las tasas por causa es hacer uso de un **.bg-purple_light[sencillo diagrama de barras]** (eje x mes, eje y tasa).
+
+```{r eval = FALSE}
+ggplot(datos,
+       aes(x = mes, y = tasa,
+           fill = causa)) + 
+  geom_col(alpha = 0.85) +
+  scale_fill_manual(
+    values = c("#e3aeae",
+               "#a5acb0",
+               "#594b4a")) +
+  labs(fill = "Causas",
+       title = "Diagrama de causas de mortalidad",
+       subtitle = "Periodo: Abril 1854 - Marzo 1855",
+       caption = "Autor: J. Álvarez Liébana | Data: {HistData}")
+
+```
+
+]
+
+.pull-right[
+
+```{r echo = FALSE, out.width = "95%"}
+ggplot(datos,
+       aes(x = mes, y = tasa, fill = causa)) + 
+  geom_col(alpha = 0.85) +
+  scale_fill_manual(
+    values = c("#e3aeae",
+               "#a5acb0",
+               "#594b4a")) +
+  labs(fill = "Causas",
+       title = "Diagrama de causas de mortalidad",
+       subtitle = "Periodo: Abril 1854 - Marzo 1855",
+       caption = "Autor: J. Álvarez Liébana | Data: {HistData}")
+
+```
+
+]
+
+---
+
+# Coordenadas .orange[POLARES]
+
+Añade **.bg-purple_light[theme_minimal()]** y **.bg-purple_light[compón una gráfica por cada periodo]**
+
+--
+
+.pull-left[
+
+```{r eval = FALSE}
+ggplot(datos,
+       aes(x = mes, y = tasa,
+           fill = causa)) + 
+  geom_col(alpha = 0.85) +
+  scale_fill_manual(
+    values = c("#e3aeae",
+               "#a5acb0",
+               "#594b4a")) +
+  facet_wrap(~periodo) +
+  theme_minimal() +
+  labs(fill = "Causas",
+       title = "Diagrama de causas de mortalidad",
+       subtitle = "Periodo: Abril 1854 - Marzo 1855",
+       caption = "Autor: J. Álvarez Liébana | Data: {HistData}")
+
+```
+
+]
+
+.pull-right[
+
+```{r echo = FALSE, out.width = "85%"}
+ggplot(datos,
+       aes(x = mes, y = tasa,
+           fill = causa)) + 
+  geom_col(alpha = 0.85) +
+  scale_fill_manual(
+    values = c("#e3aeae",
+               "#a5acb0",
+               "#594b4a")) +
+  facet_wrap(~periodo) +
+  theme_minimal() +
+  labs(fill = "Causas",
+       title = "Diagrama de causas de mortalidad",
+       subtitle = "Periodo: Abril 1854 - Marzo 1855",
+       caption = "Autor: J. Álvarez Liébana | Data: {HistData}")
+
+```
+
+]
+
+
+
+---
+
+# Coordenadas .orange[POLARES]
+
+Nuestros datos abarcan dos periodos: de abril 1854 a marzo 1855, y de abril 1855 a marzo 1856. Realiza cambios para obtener el siguiente gráfico (eje X ordenado de manera correcta).
+
+```{r echo = FALSE, out.width = "37%", fig.align = "center"}
+ggplot(datos, aes(x = mes, y = tasa, fill = causa)) + 
+  geom_col(alpha = 0.85) +
+  scale_fill_manual(values = c("#e3aeae", "#a5acb0", "#594b4a")) + 
+  facet_wrap(~periodo) +
+  theme_minimal() +
+  labs(fill = "Causas",
+       title = "Diagrama de causas de mortalidad",
+       subtitle = "Periodo: Abril 1854 - Marzo 1855",
+       caption = "Autor: J. Álvarez Liébana | Data: {HistData}")
+```
+
+---
+
+# Coordenadas .orange[POLARES]
+
+Debemos usar `fct_relevel()` para reordenar los factores
+
+```{r}
+datos <- 
+  datos %>%
+  mutate(mes =
+           fct_relevel(mes, "Apr", "May", "Jun", "Jul",
+                       "Aug", "Sep", "Oct", "Nov", "Dec",
+                       "Jan", "Feb", "Mar"))
+```
+
+
+---
+
+# Coordenadas .orange[POLARES]
+
+Busca en las capas de coordenadas `coord_...()` como cambiar a coordenadas polares.
+
+```{r echo = FALSE, out.width = "55%", fig.align = "center"}
+ggplot(datos, aes(x = mes, y = tasa, fill = causa)) + 
+  geom_col(alpha = 0.85, width = 1) +
+  scale_fill_manual(values = c("#e3aeae", "#a5acb0", "#594b4a")) +
+  coord_polar() +
+  facet_wrap(~periodo) +
+  theme_minimal() +
+  labs(fill = "Causas",
+       title = "Diagrama de causas de mortalidad",
+       subtitle = "Periodo: Abril 1854 - Marzo 1855",
+       caption = "Autor: J. Álvarez Liébana | Data: {HistData}")
+```
+
+
+---
+
+# Coordenadas .orange[POLARES]
+
+Reordena de nuevo los meses para replicar el gráfico original
+
+```{r echo = FALSE, out.width = "55%", fig.align = "center"}
+datos <- 
+  datos %>%
+  mutate(mes =
+           fct_relevel(mes, "Jul", "Aug", "Sep", "Oct",
+                       "Nov", "Dec", "Jan", "Feb",
+                       "Mar", "Apr", "May", "Jun"))
+
+ggplot(datos, aes(x = mes, y = tasa, fill = causa)) + 
+  geom_col(alpha = 0.85, width = 1) +
+  scale_fill_manual(values = c("#e3aeae", "#a5acb0", "#594b4a")) +
+  coord_polar() +
+  facet_wrap(~periodo) +
+  theme_minimal() +
+  labs(fill = "Causas",
+       title = "Diagrama de causas de mortalidad",
+       subtitle = "Periodo: Abril 1854 - Marzo 1855",
+       caption = "Autor: J. Álvarez Liébana | Data: {HistData}")
+```
+
+
+---
+
+# Coordenadas .orange[POLARES]
+
+Para mejorar la visualización y que no se noten tanto las diferencias entre gajos vamos a **.bg-purple_light[aplicar una escala (raíz cuadrada) en el eje Y]**
+
+.pull-left[
+
+
+```{r eval = FALSE}
+ggplot(datos, aes(x = mes, y = tasa,
+                  fill = causa)) + 
+  geom_col(alpha = 0.85, width = 1) +
+  scale_fill_manual(
+    values = c("#e3aeae",
+               "#a5acb0",
+               "#594b4a")) +
+  coord_polar() +
+  scale_y_sqrt() + #<<
+  facet_wrap(~periodo) +
+  theme_minimal() +
+  labs(fill = "Causas",
+       title = "Diagrama de causas de mortalidad",
+       subtitle = "Periodo: Abril 1854 - Marzo 1855",
+       caption = "Autor: J. Álvarez Liébana | Data: {HistData}")
+```
+
+]
+
+.pull-right[
+
+```{r echo = FALSE, out.width = "120%"}
+ggplot(datos, aes(x = mes, y = tasa, fill = causa)) + 
+  geom_col(alpha = 0.85, width = 1) +
+  scale_fill_manual(values = c("#e3aeae", "#a5acb0", "#594b4a")) +
+  coord_polar() +
+  scale_y_sqrt() +
+  facet_wrap(~periodo) +
+  theme_minimal() +
+  labs(fill = "Causas",
+       title = "Diagrama de causas de mortalidad",
+       subtitle = "Periodo: Abril 1854 - Marzo 1855",
+       caption = "Autor: J. Álvarez Liébana | Data: {HistData}")
+```
+
+]
+
+---
+
+# Coordenadas .orange[POLARES]
+
+Dado que en el gráfico original no hay marcas en el eje Y, vamos **.bg-purple_light[eliminar el eje Y]**
+
+--
+
+```{r}
+theme_set(theme_minimal())
+theme_update(axis.title.y = element_blank(),
+             axis.text.y = element_blank(),
+             axis.ticks.y = element_blank())
+```
+
+---
+
+# Coordenadas .orange[POLARES]
+
+Para que sea más legible vamos a **.bg-purple_light[reducir el tamaño de las etiquetas de los meses]** y vamos a darle **.bg-purple_light[etiquetas correctas a los meses]** (como en el original).
+
+```{r eval = FALSE}
+theme_set(theme_minimal())
+theme_update(axis.title.y = element_blank(), axis.text.y = element_blank(),
+             axis.ticks.y = element_blank(),
+             axis.text.x = element_text(size = 6, face = "bold"))
+
+ggplot(datos, aes(x = mes, y = tasa, fill = causa)) + 
+  geom_col(alpha = 0.85, width = 1) +
+  scale_fill_manual(values = c("#e3aeae", "#a5acb0", "#594b4a")) +
+  coord_polar() +
+  scale_y_sqrt() +
+  scale_x_discrete(labels =
+                     c("JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER",
+                       "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE")) +
+  facet_wrap(~periodo) +
+  labs(fill = "Causas",
+       title = "Diagrama de causas de mortalidad",
+       subtitle = "Periodo: Abril 1854 - Marzo 1855",
+       caption = "Autor: J. Álvarez Liébana | Data: {HistData}")
+```
+
+---
+
+# Coordenadas .orange[POLARES]
+
+Por último vamos a añadirle fuentes a los textos, poner la leyenda debajo y a poner un fondo amarillo (con transparencia)
+
+```{r eval = FALSE}
+library(sysfonts)
+library(showtext)
+font_add_google(family = "Cinzel Decorative", name = "Cinzel Decorative")
+font_add_google(family = "Roboto", name = "Roboto")
+showtext_auto()
+
+theme_set(theme_minimal(base_family = "Cinzel Decorative"))
+theme_update(axis.title.y = element_blank(), axis.text.y = element_blank(),
+             axis.ticks.y = element_blank(),
+             axis.title.x = element_text(size = 9, face = "bold"),
+             axis.text.x = element_text(size = 4, face = "bold"),
+             legend.position = "bottom",
+             legend.title = element_text(size = 9, face = "bold"),
+             plot.title =
+               element_text(hjust = 0.5, face = "bold", size = 21),
+             plot.subtitle = element_text(hjust = 0.5, size = 13),
+             plot.caption = element_text(size = 7),
+             plot.background = element_rect(fill = alpha("#F4DA47", 0.1)))
+```
+
+---
+
+# Coordenadas .orange[POLARES]
+
+
+```{r echo = FALSE, out.width = "50%", fig.align = "center"}
+library(sysfonts)
+library(showtext)
+font_add_google(family = "Cinzel Decorative",
+                name = "Cinzel Decorative")
+font_add_google(family = "Roboto",
+                name = "Roboto")
+showtext_auto()
+
+theme_set(theme_minimal(base_family = "Cinzel Decorative"))
+theme_update(axis.title.y = element_blank(),
+             axis.text.y = element_blank(),
+             axis.ticks.y = element_blank(),
+             axis.title.x = element_text(size = 9, face = "bold"),
+             axis.text.x = element_text(size = 4, face = "bold"),
+             legend.position = "bottom",
+             legend.title = element_text(size = 9, face = "bold"),
+             plot.title =
+               element_text(hjust = 0.5, face = "bold", size = 21),
+             plot.subtitle = element_text(hjust = 0.5, size = 13),
+             plot.caption = element_text(size = 7),
+             plot.background = element_rect(fill = alpha("#F4DA47", 0.1)))
+
+ggplot(datos, aes(x = mes, y = tasa, fill = causa)) + 
+  geom_col(alpha = 0.85, width = 1) +
+  scale_fill_manual(values = c("#e3aeae", "#a5acb0", "#594b4a")) +
+  coord_polar() +
+  scale_y_sqrt() +
+  scale_x_discrete(labels =
+                     c("JULY", "AUGUST", "SEPTEMBER",
+                       "OCTOBER", "NOVEMBER", "DECEMBER",
+                       "JANUARY", "FEBRUARY", "MARCH",
+                       "APRIL", "MAY", "JUNE")) +
+  facet_wrap(~periodo) +
+  labs(fill = "Causas",
+       title = "Diagrama de causas de mortalidad",
+       subtitle = "Periodo: Abril 1854 - Marzo 1855",
+       caption = "Autor: J. Álvarez Liébana | Data: {HistData}")
+```
+
+---
+
+name: histograma
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+Vamos a analizar un conjunto de datos interesante, que contiene las respuestas a las pregunta **.bg-purple_light[«¿Qué probabilidad (%) asignarías al término ...]**
+
+* **.bg-purple_light[«almost no chance»]**
+* **.bg-purple_light[«probable»]**
+* **.bg-purple_light[«almost certainly»]**
+
+...con el objetivo de **.bg-purple_light[comprender cómo la gente percibe el vocabulario]** de la probabilidad.
+
+```{r}
+datos <-
+  read_csv("https://raw.githubusercontent.com/zonination/perceptions/master/probly.csv")
+datos
+```
+
+---
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+
+```{r}
+glimpse(datos)
+```
+
+---
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+.pull-left[
+
+Replica el siguiente gráfico (prepara los datos como consideres):
+
+* Fuente: Roboto
+* Tamaño de título: 27
+* Alpha: 0.75
+* Paleta: `scale_fill_brewer(palette = "RdBu")`
+
+]
+
+.pull-right[
+
+
+```{r echo = FALSE, out.width = "90%"}
+library(showtext)
+font_add_google(family = "Roboto", name = "Roboto")
+showtext_auto()
+theme_set(theme_minimal(base_family = "Roboto"))
+theme_update(
+  plot.title = element_text(color = "black", face = "bold", size = 27))
+
+datos_pivot <-
+  datos %>%
+  pivot_longer(cols = everything(),
+               names_to = "termino", values_to = "prob")
+datos_final <-
+  datos_pivot %>%
+  mutate(termino = fct_reorder(termino, prob))  %>% filter(!(termino %in% c("Chances Are Slight", "We Doubt", "Very Good Chance", "Better Than Even", "Improbable", "Probable")))
+
+datos_resumen <-
+  datos_final %>%
+  group_by(termino) %>%
+  summarise(media = mean(prob))
+
+ggplot(datos_resumen,
+       aes(x = termino, y = media, fill = termino)) +
+  geom_col(alpha = 0.75) +
+  scale_fill_brewer(palette = "RdBu") +
+  labs(fill = "Términos",
+       y = "Probabilidad media (%)",
+       x = "Términos",
+       title = "Percepción de la probabilidad")
+```
+
+]
+
+
+---
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+
+Lo anterior es un diagrama de barras y hemos tenido que **.bg-purple_light[perder información]** por el camino (hemos tenido que resumir nuestros datos) dado que una diagrama de barras no nos permite visualizar una **.bg-purple_light[variable continua]**.
+
+.pull-left[
+
+Para ello haremos uso de un **.bg-purple_light[histograma]** con `geom_histogram()`
+
+```{r eval = FALSE}
+datos <-
+  tibble("x" = rnorm(n = 10000,
+                     mean = 3, sd = 2))
+ggplot(data = datos,
+       aes(x = x)) +
+  geom_histogram()
+```
+
+]
+
+.pull-right[
+
+```{r echo = FALSE, out.width = "85%"}
+datos <- tibble("x" = rnorm(n = 10000, mean = 3, sd = 2))
+ggplot(data = datos, aes(x = x)) +
+  geom_histogram() #<<
+```
+
+]
+
+---
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+
+.pull-left[
+
+El argumento `bins = ...` nos servirá para personalizar el nímero de barras que queremos. Fíjate que el gráfico es una **.bg-purple_light[aproximación discreta]** de un gráfico de densidad.
+
+```{r eval = FALSE}
+ggplot(data = datos,
+       aes(x = x)) +
+  geom_histogram(bins = 10) #<<
+```
+
+]
+
+.pull-right[
+
+```{r echo = FALSE, out.width = "85%"}
+ggplot(data = datos, aes(x = x)) +
+  geom_histogram(bins = 10)
+```
+
+]
+
+---
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+
+.pull-left[
+
+El argumento `bins = ...` nos servirá para personalizar el nímero de barras que queremos. Fíjate que el gráfico es una **.bg-purple_light[aproximación discreta]** de un gráfico de densidad.
+
+```{r eval = FALSE}
+ggplot(data = datos,
+       aes(x = x)) +
+  geom_histogram(bins = 50) #<<
+```
+
+]
+
+.pull-right[
+
+```{r echo = FALSE, out.width = "85%"}
+ggplot(data = datos, aes(x = x)) +
+  geom_histogram(bins = 50)
+```
+
+]
+
+---
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+
+.pull-left[
+
+Replica el siguiente gráfico (prepara los datos como consideres):
+
+* Fuente: Roboto
+* Tamaño de título: 27
+* Alpha: 0.75
+* Paleta: `scale_fill_brewer(palette = "RdBu")`
+* Bins: `bins = 20`
+
+]
+
+.pull-right[
+
+
+```{r echo = FALSE}
+library(showtext)
+font_add_google(family = "Roboto", name = "Roboto")
+showtext_auto()
+theme_set(theme_minimal(base_family = "Roboto"))
+theme_update(
+  plot.title = element_text(color = "black", face = "bold", size = 27),
+  legend.position = "bottom")
+
+ggplot(datos_final,
+       aes(x = prob, fill = termino)) +
+  geom_histogram(alpha = 0.75, bins = 20) +
+  scale_fill_brewer(palette = "RdBu") +
+  facet_wrap(~termino, scale = "free_y") +
+  labs(y = "Frecuencia relativa (%)",
+       x = "Probabilidad (%)",
+       title = "Percepción de la probabilidad",
+       fill = "Términos")
+```
+
+]
+
+---
+
+name: densidad
+
+# Variables .orange[continuas]: .green[DENSIDAD]
+
+
+.pull-left[
+
+Los histogramas en realidad son una **.bg-purple_light[aproximación discreta de los gráficos de densidad]** (asumiendo que los intervalos se pudieran ir haciendo tan pequeños como queramos, generado una curva continua). Las densidades mejoran la robustez al histograma. Para ello usaremos `geom_histogram()`
+
+```{r eval = FALSE}
+datos <-
+  tibble("x" = rnorm(n = 10000,
+                     mean = 3, sd = 2))
+ggplot(data = datos,
+       aes(x = x)) +
+  geom_density(fill = "black", #<<
+               color = "black",#<<
+               alpha = 0.5) #<<
+```
+
+]
+
+.pull-right[
+
+```{r echo = FALSE}
+datos <- tibble("x" = rnorm(n = 10000, mean = 3, sd = 2))
+ggplot(data = datos, aes(x = x)) +
+  geom_density(fill = "black", , alpha = 0.5,
+               color = "black")
+```
+
+]
+
+---
+
+# Variables .orange[continuas]: .green[DENSIDAD]
+
+
+.pull-left[
+
+Replica el siguiente gráfico (prepara los datos como consideres):
+
+* Fuente: Roboto
+* Tamaño de título: 27
+* Alpha: 0.3
+* Paleta: `scale_fill_brewer(palette = "RdBu")` y `scale_color_brewer(palette = "RdBu")`
+
+]
+
+.pull-right[
+
+
+```{r echo = FALSE}
+library(showtext)
+font_add_google(family = "Roboto", name = "Roboto")
+showtext_auto()
+theme_set(theme_minimal(base_family = "Roboto"))
+theme_update(
+  plot.title = element_text(color = "black", face = "bold", size = 27),
+  legend.position = "bottom")
+
+ggplot(datos_final,
+       aes(x = prob, color = termino,
+           fill = termino)) +
+  geom_density(alpha = 0.3) +
+  scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
+  guides(color = "none") +
+  labs(y = "Frecuencia relativa (%)",
+       x = "Probabilidad (%)",
+       title = "Percepción de la probabilidad",
+       fill = "Términos")
+```
+
+]
+
+---
+
+# Variables .orange[continuas]: .green[DENSIDAD]
+
+A veces puede ser interesante **.bg-purple_light[superponer las densidades]**, lo cual lo podemos hacer con `geom_density_ridges()`, del paquete `{ggridges}`.
+
+.pull-left[
+
+```{r eval = FALSE}
+library(ggridges)
+ggplot(datos_final,
+       aes(x = prob, y = termino, #<<
+           color = termino,
+           fill = termino)) +
+  geom_density_ridges(alpha = 0.5) + #<<
+  scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
+  guides(color = "none") +
+  labs(y = "Término",
+       x = "Probabilidad (%)",
+       title = "Percepción de la probabilidad",
+       fill = "Términos")
+```
+
+]
+
+.pull-right[
+
+```{r echo = FALSE}
+library(ggridges)
+ggplot(datos_final,
+       aes(x = prob, y = termino, color = termino,
+           fill = termino)) +
+  geom_density_ridges(alpha = 0.5) +
+  scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
+  guides(color = "none") +
+  labs(y = "Término",
+       x = "Probabilidad (%)",
+       title = "Percepción de la probabilidad",
+       fill = "Términos")
+```
+]
+
+---
+
+name: box-plot
+
+# Variables .orange[continuas]: .green[BOXPLOTS]
+
+Una opción muy habitual en variables continuas son los **.bg-purple_light[gráficos de cajas y bigotes]** o box-plots, algo que podemos hacer fácilmente con `geom_boxplot()`
+
+.pull-left[
+
+* **.bg-purple_light[Caja]**: lados inferior y superior representan el **.bg-purple_light[primer y tercer cuartil]**. La **.bg-purple_light[altura]** de la caja es el **.bg-purple_light[rango intercuartílico]** 
+
+* **.bg-purple_light[Línea]**: la línea gruesa que divide la caja marca la **.bg-purple_light[mediana]**.
+
+* **.bg-purple_light[Bigotes]**: las líneas (bigotes) que salen de las cajas llegan hasta el primer/último dato que no supere 1.5 veces el rango intercuartílico. Los **.bg-purple_light[puntos alejados representan los datos atípicos]** o outliers.
+
+```{r eval = FALSE}
+ggplot(datos_final,
+       aes(x = termino, y = prob, fill = termino)) +
+  geom_boxplot(alpha = 0.7) +
+  scale_fill_brewer(palette = "RdBu") +
+  labs(fill = "Términos",
+       y = "Probabilidad (%)",
+       x = "Términos",
+       title = "Percepción de la probabilidad")
+```
+
+]
+
+.pull-right[
+
+```{r echo = FALSE}
+ggplot(datos_final,
+       aes(x = termino, y = prob, fill = termino)) +
+  geom_boxplot(alpha = 0.7) +
+  scale_fill_brewer(palette = "RdBu") +
+  labs(fill = "Términos",
+       y = "Probabilidad (%)",
+       x = "Términos",
+       title = "Percepción de la probabilidad")
+```
+
+]
+
+---
+
+# Variables .orange[continuas]: .green[BOXPLOTS]
+
+.pull-left[
+
+Dado que el resumen a veces puede ser insuficiente, podemos usar `geom_jitter()`, que nos añadirá los puntos como una especie de **.bg-purple_light[«gotelé aleatorio»]**
+
+Ver <https://hausetutorials.netlify.app/posts/2019-02-22-why-we-should-never-use-barplots-use-geomquasirandom-instead/>
+
+```{r eval = FALSE}
+ggplot(datos_final,
+       aes(x = termino, y = prob, fill = termino)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(alpha = 0.25, size = 2) +#<<
+  scale_fill_brewer(palette = "RdBu") +
+  labs(fill = "Términos",
+       y = "Probabilidad (%)",
+       x = "Términos",
+       title = "Percepción de la probabilidad")
+```
+
+]
+
+.pull-right[
+
+```{r echo = FALSE}
+ggplot(datos_final,
+       aes(x = termino, y = prob, fill = termino)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(alpha = 0.25, size = 2) +
+  scale_fill_brewer(palette = "RdBu") +
+  labs(fill = "Términos",
+       y = "Probabilidad (%)",
+       x = "Términos",
+       title = "Percepción de la probabilidad")
+```
+
+]
+
+---
+
+# Variables .orange[continuas]: .green[BOXPLOTS]
+
+.pull-left[
+
+Podemos mejorar el **.bg-purple_light[«gotelé aleatorio»]** con  `geom_quasirandom()` del paquete `{ggbeeswarm}`
+
+
+```{r eval = FALSE}
+library(ggbeeswarm)
+ggplot(datos_final,
+       aes(x = termino, y = prob,
+           fill = termino, color = termino)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_quasirandom(size = 2,
+                   alpha = 0.4,
+                   width = .5) +
+  scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
+  guides(color = "none") +
+  labs(fill = "Términos",
+       y = "Probabilidad (%)",
+       x = "Términos",
+       title = "Percepción de la probabilidad")
+```
+
+]
+
+.pull-right[
+
+```{r echo = FALSE}
+library(ggbeeswarm)
+ggplot(datos_final,
+       aes(x = termino, y = prob,
+           fill = termino, color = termino)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_quasirandom(size = 2,
+                   alpha = 0.4,
+                   width = .5) +
+  scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
+  guides(color = "none") +
+  labs(fill = "Términos",
+       y = "Probabilidad (%)",
+       x = "Términos",
+       title = "Percepción de la probabilidad")
+```
+
+]
+
+
+---
+
+# Variables .orange[continuas]: .green[VIOLIN]
+
+.pull-left[
+
+Para solventar los problemas de los box-plots, una alternativa muy popular son los **.bg-purple_light[gráficos de violín]** (en realidad es una densidad reflejada)
+
+
+```{r eval = FALSE}
+library(ggbeeswarm)
+ggplot(datos_final,
+       aes(x = termino, y = prob,
+           fill = termino)) +
+  geom_violin(alpha = 0.4) +
+  scale_fill_brewer(palette = "RdBu") +
+  labs(fill = "Términos",
+       y = "Probabilidad (%)",
+       x = "Términos",
+       title = "Percepción de la probabilidad")
+```
+
+]
+
+.pull-right[
+
+```{r echo = FALSE}
+library(ggbeeswarm)
+ggplot(datos_final,
+       aes(x = termino, y = prob,
+           fill = termino)) +
+  geom_violin(alpha = 0.4) +
+  scale_fill_brewer(palette = "RdBu") +
+  labs(fill = "Términos",
+       y = "Probabilidad (%)",
+       x = "Términos",
+       title = "Percepción de la probabilidad")
+```
+
+]
+
+
+---
+
+# Variables .orange[continuas]: .green[RAINCLOUD]
+
+También son muy buena alternativa los **.bg-purple_light[raincloud plots]**, visualizando a la vez los datos y un resumen de los mismos.
+
+<https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-05-07>
+
+---
+
+
+
+class: inverse center middle
 name: clase-17
 
 # CLASE 17: entrega III
