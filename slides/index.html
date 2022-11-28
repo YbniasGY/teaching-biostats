@@ -1774,7 +1774,7 @@ También podemos obtener el **.bg-purple_light[«hoy y ahora»]** con la funció
 ```
 
 ```
-&gt; [1] "2022-11-28 15:18:50 CET"
+&gt; [1] "2022-11-28 22:39:30 CET"
 ```
  
 ---
@@ -3080,9 +3080,9 @@ x &lt;- rnorm(1e3) # 1000 elementos aleatorias
 
 ```
 &gt; Unit: microseconds
-&gt;         expr    min     lq     mean median      uq     max neval cld
-&gt;      sort(x) 42.225 46.412 60.81968 50.297 62.5530 299.375  1000   b
-&gt;  x[order(x)] 29.778 32.420 40.13289 35.652 41.1165 177.828  1000  a
+&gt;         expr    min     lq      mean  median       uq      max neval cld
+&gt;      sort(x) 51.105 60.995 103.43733 98.6885 113.7945 1780.035  1000   b
+&gt;  x[order(x)] 35.267 41.440  66.63743 65.2640  76.5115 1197.748  1000  a
 ```
 
 --
@@ -6331,11 +6331,11 @@ microbenchmark(x^2,
 ```
 &gt; Unit: nanoseconds
 &gt;                                     expr     min      lq        mean  median
-&gt;                                      x^2     347     491    1476.691    1133
-&gt;  for (i in 1:100) {     y[i] &lt;- x[i]^2 } 1746423 2018972 2696029.866 2278256
-&gt;         uq      max neval cld
-&gt;     2038.5    21609  1000  a 
-&gt;  2817904.0 27148819  1000   b
+&gt;                                      x^2     397     529    1411.281    1225
+&gt;  for (i in 1:100) {     y[i] &lt;- x[i]^2 } 1892536 2085369 2569975.858 2247662
+&gt;       uq      max neval cld
+&gt;     2002    13555  1000  a 
+&gt;  2731926 14045369  1000   b
 ```
 
 ---
@@ -6613,7 +6613,7 @@ sample(x = 0:1, size = 2)
 ```
 
 ```
-&gt; [1] 1 0
+&gt; [1] 0 1
 ```
 
 **.bg-red_light[IMPORTANTE]**: si no indicamos nada en el vector de probabilidades `prob`, asume que son equiprobables (en este caso, `\(1/2\)` para cada cara).
@@ -6648,7 +6648,7 @@ sample(x = 0:1, size = 30, replace = TRUE)
 ```
 
 ```
-&gt;  [1] 0 1 0 0 1 1 1 0 1 1 1 0 1 0 1 1 1 1 1 0 0 0 1 0 0 0 0 1 1 0
+&gt;  [1] 1 1 0 0 1 1 1 0 0 0 1 0 1 0 0 0 0 1 1 1 0 1 1 0 1 0 1 0 0 1
 ```
 
 ---
@@ -6663,7 +6663,7 @@ sample(x = c("cara", "cruz"), size = 10, replace = TRUE)
 ```
 
 ```
-&gt;  [1] "cara" "cara" "cruz" "cruz" "cruz" "cruz" "cara" "cruz" "cara" "cara"
+&gt;  [1] "cruz" "cruz" "cara" "cruz" "cara" "cara" "cara" "cara" "cruz" "cara"
 ```
 
 --
@@ -6676,7 +6676,7 @@ sample(x = c("cara", "cruz"), size = 10, replace = TRUE)
 ```
 
 ```
-&gt;  [1] "cruz" "cara" "cara" "cruz" "cara" "cara" "cruz" "cruz" "cruz" "cara"
+&gt;  [1] "cruz" "cara" "cara" "cruz" "cruz" "cruz" "cara" "cruz" "cara" "cruz"
 ```
 
 ---
@@ -8677,11 +8677,11 @@ microbenchmark(sqrt(x), for (i in 1:700) { y[i] &lt;- sqrt(x[i]) }, times = 1e3)
 ```
 &gt; Unit: microseconds
 &gt;                                         expr      min       lq        mean
-&gt;                                      sqrt(x)    1.779    2.596    4.332458
-&gt;  for (i in 1:700) {     y[i] &lt;- sqrt(x[i]) } 1827.429 2114.685 2597.620688
-&gt;    median        uq       max neval cld
-&gt;     3.702    4.4635    78.352  1000  a 
-&gt;  2350.555 2734.7520 16466.030  1000   b
+&gt;                                      sqrt(x)    1.887    2.635    3.720011
+&gt;  for (i in 1:700) {     y[i] &lt;- sqrt(x[i]) } 1990.018 2097.068 2507.129134
+&gt;    median       uq       max neval cld
+&gt;     3.494    4.059    25.563  1000  a 
+&gt;  2201.617 2626.881 10535.284  1000   b
 ```
 
 
@@ -8765,11 +8765,11 @@ microbenchmark(map(x, .f = function(x) { mean(x^2) }), lapply(x, FUN = function(
 ```
 &gt; Unit: milliseconds
 &gt;                                            expr      min       lq     mean
-&gt;      map(x, .f = function(x) {     mean(x^2) }) 5.814303 7.159868 9.683553
-&gt;  lapply(x, FUN = function(x) {     mean(x^2) }) 5.627676 6.830244 8.998674
+&gt;      map(x, .f = function(x) {     mean(x^2) }) 5.879373 6.849160 9.255285
+&gt;  lapply(x, FUN = function(x) {     mean(x^2) }) 6.000027 6.642724 8.642648
 &gt;    median       uq       max neval cld
-&gt;  8.037815 9.221444 244.04165  1000   b
-&gt;  7.785261 8.910750  49.66586  1000  a
+&gt;  7.822008 8.619435 178.53884  1000   b
+&gt;  7.752652 8.446866  45.44096  1000  a
 ```
 
 
@@ -15488,13 +15488,6 @@ aemet_last_obs("0076")
 
 |idema |      lon|fint                | prec| alt| vmax|  vv|  dv|      lat| dmax|ubi                  |   pres| hr| stdvv|   ts| pres_nmar| tamin|   ta| tamax|  tpr|  vis| stddv| inso|
 |:-----|--------:|:-------------------|----:|---:|----:|---:|---:|--------:|----:|:--------------------|------:|--:|-----:|----:|---------:|-----:|----:|-----:|----:|----:|-----:|----:|
-|0076  | 2.069995|2022-11-27 15:00:00 |  0.0|   4|  4.1| 2.3| 200| 41.29278|  210|BARCELONA/AEROPUERTO | 1022.0| 62|   0.3| 18.0|    1022.6|  16.8| 16.9|  17.6|  9.6| 30.0|    16|    0|
-|0076  | 2.069995|2022-11-27 16:00:00 |  0.0|   4|  3.1| 1.3| 250| 41.29278|  200|BARCELONA/AEROPUERTO | 1021.5| 69|   0.3| 14.7|    1022.1|  15.8| 15.8|  16.8| 10.2| 30.0|     7|    0|
-|0076  | 2.069995|2022-11-27 17:00:00 |  0.0|   4|  1.5| 0.2| 310| 41.29278|  230|BARCELONA/AEROPUERTO | 1020.8| 72|   0.2| 11.7|    1021.4|  14.7| 14.8|  15.8|  9.8| 29.7|    26|    0|
-|0076  | 2.069995|2022-11-27 18:00:00 |  0.0|   4|  2.6| 1.0| 360| 41.29278|  340|BARCELONA/AEROPUERTO | 1020.2| 78|   0.1| 11.8|    1020.8|  13.3| 13.3|  14.7|  9.6| 28.6|   181|    0|
-|0076  | 2.069995|2022-11-27 19:00:00 |  0.0|   4|  1.5| 0.9| 340| 41.29278|  340|BARCELONA/AEROPUERTO | 1019.8| 81|   0.5| 11.4|    1020.4|  12.5| 12.8|  13.3|  9.7| 20.6|    13|    0|
-|0076  | 2.069995|2022-11-27 20:00:00 |  0.0|   4|  1.5| 0.4|  20| 41.29278|   20|BARCELONA/AEROPUERTO | 1019.2| 81|   0.4| 11.4|    1019.8|  12.7| 12.8|  12.9|  9.7| 17.9|   169|    0|
-|0076  | 2.069995|2022-11-27 21:00:00 |  0.0|   4|  4.1| 3.0| 360| 41.29278|  350|BARCELONA/AEROPUERTO | 1018.7| 84|   0.6| 11.3|    1019.3|  11.9| 11.9|  12.8|  9.3| 20.6|   169|    0|
 |0076  | 2.069995|2022-11-27 22:00:00 |  0.0|   4|  6.2| 4.0| 240| 41.29278|  240|BARCELONA/AEROPUERTO | 1017.7| 79|   0.4| 12.8|    1018.3|  11.9| 14.5|  15.0| 10.9| 30.0|     7|    0|
 |0076  | 2.069995|2022-11-27 23:00:00 |  0.0|   4|  5.7| 3.0| 360| 41.29278|  230|BARCELONA/AEROPUERTO | 1017.7| 85|   0.3| 11.5|    1018.3|  11.9| 11.9|  15.3|  9.4| 13.8|   150|    0|
 |0076  | 2.069995|2022-11-28 00:00:00 |  0.0|   4|  3.1| 1.4|  40| 41.29278|   10|BARCELONA/AEROPUERTO | 1016.7| 86|   0.6| 11.1|    1017.3|  11.5| 11.6|  11.9|  9.3| 15.8|    42|    0|
@@ -15511,6 +15504,14 @@ aemet_last_obs("0076")
 |0076  | 2.069995|2022-11-28 11:00:00 |  1.6|   4|  9.8| 4.4|  30| 41.29278|  340|BARCELONA/AEROPUERTO | 1014.0| 83|   0.8| 10.8|    1014.6|  10.8| 10.9|  11.6|  8.1| 10.8|    20|    0|
 |0076  | 2.069995|2022-11-28 12:00:00 |  0.4|   4|  6.2| 2.3|  70| 41.29278|  360|BARCELONA/AEROPUERTO | 1013.7| 80|   0.3| 12.0|    1014.3|  10.9| 12.0|  12.1|  8.7| 30.0|    18|    0|
 |0076  | 2.069995|2022-11-28 13:00:00 |  0.0|   4|  3.1| 1.5| 250| 41.29278|  270|BARCELONA/AEROPUERTO | 1013.9| 78|   0.4| 15.1|    1014.5|  12.1| 13.5|  13.6|  9.7| 30.0|     6|    0|
+|0076  | 2.069995|2022-11-28 14:00:00 |  0.0|   4|  5.7| 4.4| 250| 41.29278|  240|BARCELONA/AEROPUERTO | 1013.9| 71|   0.6| 16.5|    1014.5|  13.6| 14.8|  14.8|  9.6| 30.0|     6|    0|
+|0076  | 2.069995|2022-11-28 15:00:00 |  0.0|   4|  6.2| 4.0| 230| 41.29278|  250|BARCELONA/AEROPUERTO | 1013.8| 69|   0.5| 15.7|    1014.4|  14.8| 14.9|  15.0|  9.3| 30.0|     7|    0|
+|0076  | 2.069995|2022-11-28 16:00:00 |  0.0|   4|  5.1| 2.7| 240| 41.29278|  240|BARCELONA/AEROPUERTO | 1014.1| 70|   0.2| 13.8|    1014.7|  14.5| 14.7|  14.9|  9.3| 30.0|     8|    0|
+|0076  | 2.069995|2022-11-28 17:00:00 |  0.0|   4|  3.1| 0.1| 330| 41.29278|  240|BARCELONA/AEROPUERTO | 1014.7| 76|   0.2| 10.2|    1015.3|  12.9| 13.0|  14.5|  8.9| 30.0|    16|    0|
+|0076  | 2.069995|2022-11-28 18:00:00 |  0.0|   4|  2.1| 1.2|  70| 41.29278|  260|BARCELONA/AEROPUERTO | 1015.1| 82|   0.5|  9.7|    1015.7|  11.6| 11.8|  12.9|  8.8| 30.0|    91|    0|
+|0076  | 2.069995|2022-11-28 19:00:00 |  0.0|   4|  4.1| 1.1| 350| 41.29278|  340|BARCELONA/AEROPUERTO | 1015.7| 83|   0.8|  9.0|    1016.3|  10.7| 11.2|  11.9|  8.4| 30.0|   166|    0|
+|0076  | 2.069995|2022-11-28 20:00:00 |  0.0|   4|  4.6| 1.8|  30| 41.29278|   30|BARCELONA/AEROPUERTO | 1016.2| 69|   0.2|  8.9|    1016.8|  10.5| 11.8|  12.0|  6.2| 30.0|   139|    0|
+|0076  | 2.069995|2022-11-28 21:00:00 |  0.0|   4|  4.6| 3.0| 360| 41.29278|   10|BARCELONA/AEROPUERTO | 1016.4| 69|   0.2|  8.8|    1017.0|  10.9| 11.1|  11.8|  5.6| 30.0|   180|    0|
 
 ---
 
@@ -19778,7 +19779,7 @@ ggplotly(gg, tooltip = c("text"))
 # .orange[INTERACTIVOS]: plotly
 
 <div id="htmlwidget-d20dabd36b68245f4577" style="width:70%;height:700px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-d20dabd36b68245f4577">{"x":{"data":[{"orientation":"v","width":[4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5],"base":[0.952708598111373,0.954358779223076,0.951996569463208,0.946505693830392,0.949044996083606,0.947543903123967,0.951902519311172,0.958756869122911,0.959913418875341,0.96294946569192,0.963239654619816,0.962065066059655],"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[0.0472914018886267,0.0456412207769236,0.0480034305367918,0.0534943061696077,0.0509550039163942,0.0524560968760334,0.0480974806888278,0.0412431308770888,0.0400865811246586,0.0370505343080801,0.0367603453801837,0.0379349339403448],"text":["<b>PIB medio<\/b>: 1252.57$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1952","<b>PIB medio<\/b>: 1385.24$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1957","<b>PIB medio<\/b>: 1598.08$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1962","<b>PIB medio<\/b>: 2050.36$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1967","<b>PIB medio<\/b>: 2339.62$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1972","<b>PIB medio<\/b>: 2585.94$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1977","<b>PIB medio<\/b>: 2481.59$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1982","<b>PIB medio<\/b>: 2282.67$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1987","<b>PIB medio<\/b>: 2281.81$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1992","<b>PIB medio<\/b>: 2378.76$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1997","<b>PIB medio<\/b>: 2599.39$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 2002","<b>PIB medio<\/b>: 3089.03$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 2007"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(0,0,0,0.7)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Africa","legendgroup":"Africa","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5],"base":[0.798701870557711,0.802267827448396,0.804763015622975,0.798620090389056,0.80766880335025,0.798407488322447,0.806409222067998,0.817946165434532,0.818580937822493,0.824493544042868,0.831893894997778,0.826942090273792],"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[0.154006727553662,0.15209095177468,0.147233553840233,0.147885603441337,0.141376192733356,0.14913641480152,0.145493297243174,0.140810703688379,0.141332481052848,0.138455921649052,0.131345759622038,0.135122975785863],"text":["<b>PIB medio<\/b>: 4079.06$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1952","<b>PIB medio<\/b>: 4616.04$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1957","<b>PIB medio<\/b>: 4901.54$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1962","<b>PIB medio<\/b>: 5668.25$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1967","<b>PIB medio<\/b>: 6491.33$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1972","<b>PIB medio<\/b>: 7352.01$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1977","<b>PIB medio<\/b>: 7506.74$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1982","<b>PIB medio<\/b>: 7793.4$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1987","<b>PIB medio<\/b>: 8044.93$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1992","<b>PIB medio<\/b>: 8889.3$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1997","<b>PIB medio<\/b>: 9287.68$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 2002","<b>PIB medio<\/b>: 11003.03$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 2007"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(230,159,0,0.7)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Americas","legendgroup":"Americas","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5],"base":[0.602544180088376,0.611571668066277,0.632662996195583,0.642831260862377,0.629352123287509,0.640359676402933,0.662323073382788,0.680481170377275,0.66679985463529,0.671321942380566,0.688012533042515,0.673766805031049],"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[0.196157690469336,0.190696159382119,0.172100019427393,0.155788829526678,0.178316680062741,0.158047811919513,0.14408614868521,0.137464995057257,0.151781083187203,0.153171601662302,0.143881361955263,0.153175285242743],"text":["<b>PIB medio<\/b>: 5195.48$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1952","<b>PIB medio<\/b>: 5787.73$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1957","<b>PIB medio<\/b>: 5729.37$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1962","<b>PIB medio<\/b>: 5971.17$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1967","<b>PIB medio<\/b>: 8187.47$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1972","<b>PIB medio<\/b>: 7791.31$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1977","<b>PIB medio<\/b>: 7434.14$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1982","<b>PIB medio<\/b>: 7608.23$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1987","<b>PIB medio<\/b>: 8639.69$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1992","<b>PIB medio<\/b>: 9834.09$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1997","<b>PIB medio<\/b>: 10174.09$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 2002","<b>PIB medio<\/b>: 12473.03$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 2007"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(86,180,233,0.7)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Asia","legendgroup":"Asia","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5],"base":[0.388808568323732,0.382151994507502,0.381378729766887,0.378177342598925,0.357556711514759,0.350607313964265,0.35962174808262,0.369454003067469,0.36706419161515,0.374190205332155,0.380966545678531,0.366084683349535],"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[0.213735611764644,0.229419673558775,0.251284266428695,0.264653918263452,0.27179541177275,0.289752362438668,0.302701325300168,0.311027167309806,0.299735663020141,0.297131737048411,0.307045987363984,0.307682121681514],"text":["<b>PIB medio<\/b>: 5661.06$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1952","<b>PIB medio<\/b>: 6963.01$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1957","<b>PIB medio<\/b>: 8365.49$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1962","<b>PIB medio<\/b>: 10143.82$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1967","<b>PIB medio<\/b>: 12479.58$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1972","<b>PIB medio<\/b>: 14283.98$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1977","<b>PIB medio<\/b>: 15617.9$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1982","<b>PIB medio<\/b>: 17214.31$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1987","<b>PIB medio<\/b>: 17061.57$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1992","<b>PIB medio<\/b>: 19076.78$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1997","<b>PIB medio<\/b>: 21711.73$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 2002","<b>PIB medio<\/b>: 25054.48$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 2007"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(0,158,115,0.7)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Europe","legendgroup":"Europe","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5],"base":[0,0,0,0,0,0,0,0,0,0,0,0],"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[0.388808568323732,0.382151994507502,0.381378729766887,0.378177342598925,0.357556711514759,0.350607313964265,0.35962174808262,0.369454003067469,0.36706419161515,0.374190205332155,0.380966545678531,0.366084683349535],"text":["<b>PIB medio<\/b>: 10298.09$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1952","<b>PIB medio<\/b>: 11598.52$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1957","<b>PIB medio<\/b>: 12696.45$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1962","<b>PIB medio<\/b>: 14495.02$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1967","<b>PIB medio<\/b>: 16417.33$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1972","<b>PIB medio<\/b>: 17283.96$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1977","<b>PIB medio<\/b>: 18554.71$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1982","<b>PIB medio<\/b>: 20448.04$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1987","<b>PIB medio<\/b>: 20894.05$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1992","<b>PIB medio<\/b>: 24024.18$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1997","<b>PIB medio<\/b>: 26938.78$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 2002","<b>PIB medio<\/b>: 29810.19$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 2007"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(240,228,66,0.7)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Oceania","legendgroup":"Oceania","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":40.8401826484018,"r":7.30593607305936,"b":37.2602739726027,"l":48.9497716894977},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Diagrama de barras","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[1946.775,2012.225],"tickmode":"array","ticktext":["1960","1980","2000"],"tickvals":[1960,1980,2000],"categoryorder":"array","categoryarray":["1960","1980","2000"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"Año","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.05,1.05],"tickmode":"array","ticktext":["0.00","0.25","0.50","0.75","1.00"],"tickvals":[0,0.25,0.5,0.75,1],"categoryorder":"array","categoryarray":["0.00","0.25","0.50","0.75","1.00"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"PIB medio","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.938132733408324},"annotations":[{"text":"continent","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"151e3f8bcaa4":{"x":{},"y":{},"fill":{},"text":{},"type":"bar"}},"cur_data":"151e3f8bcaa4","visdat":{"151e3f8bcaa4":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-d20dabd36b68245f4577">{"x":{"data":[{"orientation":"v","width":[4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5],"base":[0.952708598111373,0.954358779223076,0.951996569463208,0.946505693830392,0.949044996083606,0.947543903123967,0.951902519311172,0.958756869122911,0.959913418875341,0.96294946569192,0.963239654619816,0.962065066059655],"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[0.0472914018886267,0.0456412207769236,0.0480034305367918,0.0534943061696077,0.0509550039163942,0.0524560968760334,0.0480974806888278,0.0412431308770888,0.0400865811246586,0.0370505343080801,0.0367603453801837,0.0379349339403448],"text":["<b>PIB medio<\/b>: 1252.57$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1952","<b>PIB medio<\/b>: 1385.24$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1957","<b>PIB medio<\/b>: 1598.08$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1962","<b>PIB medio<\/b>: 2050.36$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1967","<b>PIB medio<\/b>: 2339.62$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1972","<b>PIB medio<\/b>: 2585.94$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1977","<b>PIB medio<\/b>: 2481.59$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1982","<b>PIB medio<\/b>: 2282.67$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1987","<b>PIB medio<\/b>: 2281.81$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1992","<b>PIB medio<\/b>: 2378.76$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 1997","<b>PIB medio<\/b>: 2599.39$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 2002","<b>PIB medio<\/b>: 3089.03$<br /><b>Continente<\/b>: Africa<br /><b>Año<\/b>: 2007"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(0,0,0,0.7)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Africa","legendgroup":"Africa","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5],"base":[0.798701870557711,0.802267827448396,0.804763015622975,0.798620090389056,0.80766880335025,0.798407488322447,0.806409222067998,0.817946165434532,0.818580937822493,0.824493544042868,0.831893894997778,0.826942090273792],"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[0.154006727553662,0.15209095177468,0.147233553840233,0.147885603441337,0.141376192733356,0.14913641480152,0.145493297243174,0.140810703688379,0.141332481052848,0.138455921649052,0.131345759622038,0.135122975785863],"text":["<b>PIB medio<\/b>: 4079.06$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1952","<b>PIB medio<\/b>: 4616.04$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1957","<b>PIB medio<\/b>: 4901.54$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1962","<b>PIB medio<\/b>: 5668.25$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1967","<b>PIB medio<\/b>: 6491.33$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1972","<b>PIB medio<\/b>: 7352.01$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1977","<b>PIB medio<\/b>: 7506.74$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1982","<b>PIB medio<\/b>: 7793.4$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1987","<b>PIB medio<\/b>: 8044.93$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1992","<b>PIB medio<\/b>: 8889.3$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 1997","<b>PIB medio<\/b>: 9287.68$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 2002","<b>PIB medio<\/b>: 11003.03$<br /><b>Continente<\/b>: Americas<br /><b>Año<\/b>: 2007"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(230,159,0,0.7)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Americas","legendgroup":"Americas","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5],"base":[0.602544180088376,0.611571668066277,0.632662996195583,0.642831260862377,0.629352123287509,0.640359676402933,0.662323073382788,0.680481170377275,0.66679985463529,0.671321942380566,0.688012533042515,0.673766805031049],"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[0.196157690469336,0.190696159382119,0.172100019427393,0.155788829526678,0.178316680062741,0.158047811919513,0.14408614868521,0.137464995057257,0.151781083187203,0.153171601662302,0.143881361955263,0.153175285242743],"text":["<b>PIB medio<\/b>: 5195.48$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1952","<b>PIB medio<\/b>: 5787.73$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1957","<b>PIB medio<\/b>: 5729.37$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1962","<b>PIB medio<\/b>: 5971.17$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1967","<b>PIB medio<\/b>: 8187.47$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1972","<b>PIB medio<\/b>: 7791.31$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1977","<b>PIB medio<\/b>: 7434.14$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1982","<b>PIB medio<\/b>: 7608.23$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1987","<b>PIB medio<\/b>: 8639.69$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1992","<b>PIB medio<\/b>: 9834.09$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 1997","<b>PIB medio<\/b>: 10174.09$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 2002","<b>PIB medio<\/b>: 12473.03$<br /><b>Continente<\/b>: Asia<br /><b>Año<\/b>: 2007"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(86,180,233,0.7)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Asia","legendgroup":"Asia","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5],"base":[0.388808568323732,0.382151994507502,0.381378729766887,0.378177342598925,0.357556711514759,0.350607313964265,0.35962174808262,0.369454003067469,0.36706419161515,0.374190205332155,0.380966545678531,0.366084683349535],"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[0.213735611764644,0.229419673558775,0.251284266428695,0.264653918263452,0.27179541177275,0.289752362438668,0.302701325300168,0.311027167309806,0.299735663020141,0.297131737048411,0.307045987363984,0.307682121681514],"text":["<b>PIB medio<\/b>: 5661.06$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1952","<b>PIB medio<\/b>: 6963.01$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1957","<b>PIB medio<\/b>: 8365.49$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1962","<b>PIB medio<\/b>: 10143.82$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1967","<b>PIB medio<\/b>: 12479.58$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1972","<b>PIB medio<\/b>: 14283.98$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1977","<b>PIB medio<\/b>: 15617.9$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1982","<b>PIB medio<\/b>: 17214.31$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1987","<b>PIB medio<\/b>: 17061.57$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1992","<b>PIB medio<\/b>: 19076.78$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 1997","<b>PIB medio<\/b>: 21711.73$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 2002","<b>PIB medio<\/b>: 25054.48$<br /><b>Continente<\/b>: Europe<br /><b>Año<\/b>: 2007"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(0,158,115,0.7)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Europe","legendgroup":"Europe","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5,4.5],"base":[0,0,0,0,0,0,0,0,0,0,0,0],"x":[1952,1957,1962,1967,1972,1977,1982,1987,1992,1997,2002,2007],"y":[0.388808568323732,0.382151994507502,0.381378729766887,0.378177342598925,0.357556711514759,0.350607313964265,0.35962174808262,0.369454003067469,0.36706419161515,0.374190205332155,0.380966545678531,0.366084683349535],"text":["<b>PIB medio<\/b>: 10298.09$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1952","<b>PIB medio<\/b>: 11598.52$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1957","<b>PIB medio<\/b>: 12696.45$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1962","<b>PIB medio<\/b>: 14495.02$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1967","<b>PIB medio<\/b>: 16417.33$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1972","<b>PIB medio<\/b>: 17283.96$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1977","<b>PIB medio<\/b>: 18554.71$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1982","<b>PIB medio<\/b>: 20448.04$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1987","<b>PIB medio<\/b>: 20894.05$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1992","<b>PIB medio<\/b>: 24024.18$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 1997","<b>PIB medio<\/b>: 26938.78$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 2002","<b>PIB medio<\/b>: 29810.19$<br /><b>Continente<\/b>: Oceania<br /><b>Año<\/b>: 2007"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(240,228,66,0.7)","line":{"width":1.88976377952756,"color":"transparent"}},"name":"Oceania","legendgroup":"Oceania","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":40.8401826484018,"r":7.30593607305936,"b":37.2602739726027,"l":48.9497716894977},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Diagrama de barras","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[1946.775,2012.225],"tickmode":"array","ticktext":["1960","1980","2000"],"tickvals":[1960,1980,2000],"categoryorder":"array","categoryarray":["1960","1980","2000"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"Año","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.05,1.05],"tickmode":"array","ticktext":["0.00","0.25","0.50","0.75","1.00"],"tickvals":[0,0.25,0.5,0.75,1],"categoryorder":"array","categoryarray":["0.00","0.25","0.50","0.75","1.00"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"PIB medio","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.938132733408324},"annotations":[{"text":"continent","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"16ab5352a142":{"x":{},"y":{},"fill":{},"text":{},"type":"bar"}},"cur_data":"16ab5352a142","visdat":{"16ab5352a142":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 
 ---
 
@@ -20308,6 +20309,15 @@ datos
 # Variables .orange[continuas]: .green[HISTOGRAMA]
 
 
+Vamos a analizar un conjunto de datos interesante, que contiene las respuestas a las pregunta **.bg-purple_light[«¿Qué probabilidad (%) asignarías al término ...]**
+
+* **.bg-purple_light[«almost no chance»]**
+* **.bg-purple_light[«probable»]**
+* **.bg-purple_light[«almost certainly»]**
+
+...con el objetivo de **.bg-purple_light[comprender cómo la gente percibe el vocabulario]** de la probabilidad.
+
+
 
 ```r
 glimpse(datos)
@@ -20358,10 +20368,151 @@ Replica el siguiente gráfico (prepara los datos como consideres):
 ]
 
 
+
 ---
 
 # Variables .orange[continuas]: .green[HISTOGRAMA]
 
+Lo primero que deberemos hacer es **.bg-purple_light[preparar nuestros datos]** para la posterior visualización: en `{ggplot2}` suele ser en formato tidy
+
+
+
+```r
+datos_tidy &lt;-
+  datos %&gt;%
+  pivot_longer(cols = everything(),
+               names_to = "termino", values_to = "prob")
+datos_tidy
+```
+
+```
+&gt; # A tibble: 782 × 2
+&gt;    termino           prob
+&gt;    &lt;chr&gt;            &lt;dbl&gt;
+&gt;  1 Almost Certainly    95
+&gt;  2 Highly Likely       80
+&gt;  3 Very Good Chance    85
+&gt;  4 Probable            75
+&gt;  5 Likely              66
+&gt;  6 Probably            75
+&gt;  7 We Believe          66
+&gt;  8 Better Than Even    55
+&gt;  9 About Even          50
+&gt; 10 We Doubt            40
+&gt; # … with 772 more rows
+&gt; # ℹ Use `print(n = ...)` to see more rows
+```
+
+---
+
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+Para entender mejor los datos vamos a **.bg-purple_light[realizar un resumen de los datos]** calculando la **.bg-purple_light[media de probabilidad asignada]**
+
+
+```r
+datos_tidy %&gt;% 
+  group_by(termino) %&gt;% 
+  summarise(mean_prob = mean(prob)) %&gt;% 
+  ungroup() %&gt;% 
+  arrange(mean_prob)
+```
+
+```
+&gt; # A tibble: 17 × 2
+&gt;    termino            mean_prob
+&gt;    &lt;chr&gt;                  &lt;dbl&gt;
+&gt;  1 Almost No Chance        5.63
+&gt;  2 Highly Unlikely        10.1 
+&gt;  3 Chances Are Slight     14.1 
+&gt;  4 Little Chance          16.0 
+&gt;  5 Improbable             18.0 
+&gt;  6 Unlikely               19.9 
+&gt;  7 We Doubt               27.9 
+&gt;  8 Probably Not           29.5 
+&gt;  9 About Even             49.6 
+&gt; 10 Better Than Even       58.4 
+&gt; 11 We Believe             68.5 
+&gt; 12 Probable               71.5 
+&gt; 13 Probably               71.5 
+&gt; 14 Likely                 72   
+&gt; 15 Very Good Chance       79.8 
+&gt; 16 Highly Likely          86.2 
+&gt; 17 Almost Certainly       92.6
+```
+
+
+---
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+Por último, para simplficar los gráficos, vamos a **.bg-purple_light[filtrar solo algunos términos]** (tras convertirlos a factor en función de su media de probabilidad con `fct_reorder()`)
+
+
+```r
+datos_final &lt;-
+  datos_tidy %&gt;% 
+  mutate(termino = fct_reorder(termino, prob, .fun = mean)) %&gt;% 
+  filter(termino %in%
+           c("Almost No Chance", "Highly Unlikely", "Improbable",
+             "Probably Not", "About Even",
+             "We Believe", "Probably", "Highly Likely",
+             "Almost Certainly"))
+datos_final %&gt;% count(termino)
+```
+
+```
+&gt; # A tibble: 9 × 2
+&gt;   termino              n
+&gt;   &lt;fct&gt;            &lt;int&gt;
+&gt; 1 Almost No Chance    46
+&gt; 2 Highly Unlikely     46
+&gt; 3 Improbable          46
+&gt; 4 Probably Not        46
+&gt; 5 About Even          46
+&gt; 6 We Believe          46
+&gt; 7 Probably            46
+&gt; 8 Highly Likely       46
+&gt; 9 Almost Certainly    46
+```
+
+---
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+.pull-left[
+
+
+```r
+datos_resumen &lt;-
+  datos_final %&gt;%
+  group_by(termino) %&gt;%
+  summarise(media = mean(prob))
+
+ggplot(datos_resumen,
+       aes(x = termino, y = media, fill = termino)) +
+  geom_col(alpha = 0.7) +
+  scale_fill_brewer(palette = "RdBu") +
+  labs(fill = "Términos",
+       y = "Probabilidad media (%)",
+       x = "Términos",
+       title = "Percepción de la probabilidad")
+```
+
+]
+
+
+.pull-right[
+
+&lt;img src="index_files/figure-html/unnamed-chunk-889-1.png" width="100%" /&gt;
+
+]
+  
+---
+
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
 
 Lo anterior es un diagrama de barras y hemos tenido que **.bg-purple_light[perder información]** por el camino (hemos tenido que resumir nuestros datos) dado que una diagrama de barras no nos permite visualizar una **.bg-purple_light[variable continua]**.
 
@@ -20383,7 +20534,7 @@ ggplot(data = datos,
 
 .pull-right[
 
-&lt;img src="index_files/figure-html/unnamed-chunk-886-1.png" width="85%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-891-1.png" width="80%" /&gt;
 
 ]
 
@@ -20400,14 +20551,14 @@ El argumento `bins = ...` nos servirá para personalizar el nímero de barras qu
 ```r
 ggplot(data = datos,
        aes(x = x)) +
-* geom_histogram(bins = 10)
+* geom_histogram(bins = 7)
 ```
 
 ]
 
 .pull-right[
 
-&lt;img src="index_files/figure-html/unnamed-chunk-888-1.png" width="85%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-893-1.png" width="95%" /&gt;
 
 ]
 
@@ -20431,7 +20582,7 @@ ggplot(data = datos,
 
 .pull-right[
 
-&lt;img src="index_files/figure-html/unnamed-chunk-890-1.png" width="85%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-895-1.png" width="95%" /&gt;
 
 ]
 
@@ -20442,20 +20593,61 @@ ggplot(data = datos,
 
 .pull-left[
 
-Replica el siguiente gráfico (prepara los datos como consideres):
+Replica el siguiente gráfico:
 
 * Fuente: Roboto
 * Tamaño de título: 27
-* Alpha: 0.75
+* Alpha: 0.85
 * Paleta: `scale_fill_brewer(palette = "RdBu")`
-* Bins: `bins = 20`
+* Bins: `bins = 18`
 
 ]
 
 .pull-right[
 
 
-&lt;img src="index_files/figure-html/unnamed-chunk-891-1.png" width="100%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-896-1.png" width="100%" /&gt;
+
+]
+
+---
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+
+.pull-left[
+
+
+
+```r
+library(showtext)
+font_add_google(family = "Roboto",
+                name = "Roboto")
+showtext_auto()
+theme_set(theme_minimal(base_family = "Roboto"))
+theme_update(
+  plot.title = element_text(color = "black", face = "bold", size = 27),
+  legend.position = "bottom")
+
+ggplot(datos_final,
+       aes(x = prob, fill = termino)) +
+  geom_histogram(alpha = 0.85, bins = 18) +
+  scale_fill_brewer(palette = "RdBu") +
+  facet_wrap(~termino, scale = "free_y",
+             nrow = 3) +
+  labs(y = "Frecuencia relativa (%)",
+       x = "Probabilidad (%)",
+       title = "Percepción de la probabilidad",
+       fill = "Términos")
+```
+
+]
+
+
+.pull-right[
+
+
+&lt;img src="index_files/figure-html/unnamed-chunk-898-1.png" width="100%" /&gt;
 
 ]
 
@@ -20468,7 +20660,7 @@ name: densidad
 
 .pull-left[
 
-Los histogramas en realidad son una **.bg-purple_light[aproximación discreta de los gráficos de densidad]** (asumiendo que los intervalos se pudieran ir haciendo tan pequeños como queramos, generado una curva continua). Las densidades mejoran la robustez al histograma. Para ello usaremos `geom_histogram()`
+Los histogramas en realidad son una **.bg-purple_light[aproximación discreta de los gráficos de densidad]** (asumiendo que los intervalos se pudieran ir haciendo tan pequeños como queramos, generado una curva continua). Las densidades mejoran la robustez al histograma. Para ello usaremos `geom_density()`
 
 
 ```r
@@ -20477,16 +20669,17 @@ datos &lt;-
                      mean = 3, sd = 2))
 ggplot(data = datos,
        aes(x = x)) +
-* geom_density(fill = "black",
+* geom_density(fill = "red",
 *              color = "black",
-*              alpha = 0.5)
+*              alpha = 0.2) +
+  theme_minimal()
 ```
 
 ]
 
 .pull-right[
 
-&lt;img src="index_files/figure-html/unnamed-chunk-893-1.png" width="100%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-900-1.png" width="100%" /&gt;
 
 ]
 
@@ -20501,7 +20694,7 @@ Replica el siguiente gráfico (prepara los datos como consideres):
 
 * Fuente: Roboto
 * Tamaño de título: 27
-* Alpha: 0.3
+* Alpha: 0.5
 * Paleta: `scale_fill_brewer(palette = "RdBu")` y `scale_color_brewer(palette = "RdBu")`
 
 ]
@@ -20509,11 +20702,44 @@ Replica el siguiente gráfico (prepara los datos como consideres):
 .pull-right[
 
 
-&lt;img src="index_files/figure-html/unnamed-chunk-894-1.png" width="100%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-901-1.png" width="100%" /&gt;
 
 ]
 
 ---
+
+# Variables .orange[continuas]: .green[DENSIDAD]
+
+.pull-left[
+
+
+```r
+# hereda tema anterior
+
+ggplot(datos_final,
+       aes(x = prob, color = termino,
+           fill = termino)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
+  guides(color = "none") +
+  labs(y = "Frecuencia relativa (%)",
+       x = "Probabilidad (%)",
+       title = "Percepción de la probabilidad",
+       fill = "Términos")
+```
+
+]
+
+.pull-right[
+
+
+&lt;img src="index_files/figure-html/unnamed-chunk-903-1.png" width="100%" /&gt;
+
+]
+
+---
+
 
 # Variables .orange[continuas]: .green[DENSIDAD]
 
@@ -20523,6 +20749,8 @@ A veces puede ser interesante **.bg-purple_light[superponer las densidades]**, l
 
 
 ```r
+# hereda tema anterior
+
 library(ggridges)
 ggplot(datos_final,
 *      aes(x = prob, y = termino,
@@ -20542,7 +20770,7 @@ ggplot(datos_final,
 
 .pull-right[
 
-&lt;img src="index_files/figure-html/unnamed-chunk-896-1.png" width="100%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-905-1.png" width="100%" /&gt;
 ]
 
 ---
@@ -20555,17 +20783,11 @@ Una opción muy habitual en variables continuas son los **.bg-purple_light[gráf
 
 .pull-left[
 
-* **.bg-purple_light[Caja]**: lados inferior y superior representan el **.bg-purple_light[primer y tercer cuartil]**. La **.bg-purple_light[altura]** de la caja es el **.bg-purple_light[rango intercuartílico]** 
-
-* **.bg-purple_light[Línea]**: la línea gruesa que divide la caja marca la **.bg-purple_light[mediana]**.
-
-* **.bg-purple_light[Bigotes]**: las líneas (bigotes) que salen de las cajas llegan hasta el primer/último dato que no supere 1.5 veces el rango intercuartílico. Los **.bg-purple_light[puntos alejados representan los datos atípicos]** o outliers.
-
 
 ```r
 ggplot(datos_final,
        aes(x = termino, y = prob, fill = termino)) +
-  geom_boxplot(alpha = 0.7) +
+  geom_boxplot(alpha = 0.5) +
   scale_fill_brewer(palette = "RdBu") +
   labs(fill = "Términos",
        y = "Probabilidad (%)",
@@ -20577,7 +20799,7 @@ ggplot(datos_final,
 
 .pull-right[
 
-&lt;img src="index_files/figure-html/unnamed-chunk-898-1.png" width="100%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-907-1.png" width="90%" /&gt;
 
 ]
 
@@ -20587,17 +20809,20 @@ ggplot(datos_final,
 
 .pull-left[
 
-Dado que el resumen a veces puede ser insuficiente, podemos usar `geom_jitter()`, que nos añadirá los puntos como una especie de **.bg-purple_light[«gotelé aleatorio»]**
+El resumen a veces puede ser insuficiente, podemos usar `geom_jitter()`, que nos añadirá puntos como un **.bg-purple_light[«gotelé aleatorio»]**
 
 Ver &lt;https://hausetutorials.netlify.app/posts/2019-02-22-why-we-should-never-use-barplots-use-geomquasirandom-instead/&gt;
 
 
 ```r
 ggplot(datos_final,
-       aes(x = termino, y = prob, fill = termino)) +
-  geom_boxplot(alpha = 0.7) +
+       aes(x = termino, y = prob,
+           fill = termino,
+           color = termino)) +
+  geom_boxplot(alpha = 0.5) +
 * geom_jitter(alpha = 0.25, size = 2) +
   scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
   labs(fill = "Términos",
        y = "Probabilidad (%)",
        x = "Términos",
@@ -20608,7 +20833,7 @@ ggplot(datos_final,
 
 .pull-right[
 
-&lt;img src="index_files/figure-html/unnamed-chunk-900-1.png" width="100%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-909-1.png" width="100%" /&gt;
 
 ]
 
@@ -20618,7 +20843,7 @@ ggplot(datos_final,
 
 .pull-left[
 
-Podemos mejorar el **.bg-purple_light[«gotelé aleatorio»]** con  `geom_quasirandom()` del paquete `{ggbeeswarm}`
+Podemos mejorar el **.bg-purple_light[«gotelé aleatorio»]** con  `geom_quasirandom()` del paquete `{ggbeeswarm}` (con `width = ...` controlamos la anchura de lo aleatorio)
 
 
 
@@ -20627,10 +20852,10 @@ library(ggbeeswarm)
 ggplot(datos_final,
        aes(x = termino, y = prob,
            fill = termino, color = termino)) +
-  geom_boxplot(alpha = 0.7) +
+  geom_boxplot(alpha = 0.5) +
   geom_quasirandom(size = 2,
                    alpha = 0.4,
-                   width = .5) +
+                   width = 0.5) +
   scale_fill_brewer(palette = "RdBu") +
   scale_color_brewer(palette = "RdBu") +
   guides(color = "none") +
@@ -20644,7 +20869,7 @@ ggplot(datos_final,
 
 .pull-right[
 
-&lt;img src="index_files/figure-html/unnamed-chunk-902-1.png" width="100%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-911-1.png" width="100%" /&gt;
 
 ]
 
@@ -20663,9 +20888,13 @@ Para solventar los problemas de los box-plots, una alternativa muy popular son l
 library(ggbeeswarm)
 ggplot(datos_final,
        aes(x = termino, y = prob,
-           fill = termino)) +
-  geom_violin(alpha = 0.4) +
+           fill = termino, color = termino)) +
+  geom_violin(alpha = 0.5,
+              scale = "count",
+              bw = 1.2) +
   scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
+  guides(color = "none") +
   labs(fill = "Términos",
        y = "Probabilidad (%)",
        x = "Términos",
@@ -20676,18 +20905,9 @@ ggplot(datos_final,
 
 .pull-right[
 
-&lt;img src="index_files/figure-html/unnamed-chunk-904-1.png" width="100%" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-913-1.png" width="100%" /&gt;
 
 ]
-
-
----
-
-# Variables .orange[continuas]: .green[RAINCLOUD]
-
-También son muy buena alternativa los **.bg-purple_light[raincloud plots]**, visualizando a la vez los datos y un resumen de los mismos.
-
-&lt;https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-05-07&gt;
 
 ---
 

@@ -14541,6 +14541,15 @@ datos
 # Variables .orange[continuas]: .green[HISTOGRAMA]
 
 
+Vamos a analizar un conjunto de datos interesante, que contiene las respuestas a las pregunta **.bg-purple_light[«¿Qué probabilidad (%) asignarías al término ...]**
+
+* **.bg-purple_light[«almost no chance»]**
+* **.bg-purple_light[«probable»]**
+* **.bg-purple_light[«almost certainly»]**
+
+...con el objetivo de **.bg-purple_light[comprender cómo la gente percibe el vocabulario]** de la probabilidad.
+
+
 ```{r}
 glimpse(datos)
 ```
@@ -14571,22 +14580,26 @@ theme_set(theme_minimal(base_family = "Roboto"))
 theme_update(
   plot.title = element_text(color = "black", face = "bold", size = 27))
 
-datos_pivot <-
+datos_final <-
   datos %>%
   pivot_longer(cols = everything(),
-               names_to = "termino", values_to = "prob")
-datos_final <-
-  datos_pivot %>%
-  mutate(termino = fct_reorder(termino, prob))  %>% filter(!(termino %in% c("Chances Are Slight", "We Doubt", "Very Good Chance", "Better Than Even", "Improbable", "Probable")))
+               names_to = "termino", values_to = "prob") %>% 
+  mutate(termino = fct_reorder(termino, prob, .fun = mean)) %>% 
+  filter(termino %in%
+           c("Almost No Chance", "Highly Unlikely", "Improbable",
+             "Probably Not", "About Even",
+             "We Believe", "Probably", "Highly Likely",
+             "Almost Certainly"))
 
 datos_resumen <-
   datos_final %>%
   group_by(termino) %>%
-  summarise(media = mean(prob))
+  summarise(mean_prob = mean(prob)) %>%
+  ungroup()
 
 ggplot(datos_resumen,
-       aes(x = termino, y = media, fill = termino)) +
-  geom_col(alpha = 0.75) +
+       aes(x = termino, y = mean_prob, fill = termino)) +
+  geom_col(alpha = 0.7) +
   scale_fill_brewer(palette = "RdBu") +
   labs(fill = "Términos",
        y = "Probabilidad media (%)",
@@ -14597,10 +14610,105 @@ ggplot(datos_resumen,
 ]
 
 
+
 ---
 
 # Variables .orange[continuas]: .green[HISTOGRAMA]
 
+Lo primero que deberemos hacer es **.bg-purple_light[preparar nuestros datos]** para la posterior visualización: en `{ggplot2}` suele ser en formato tidy
+
+
+```{r}
+datos_tidy <-
+  datos %>%
+  pivot_longer(cols = everything(),
+               names_to = "termino", values_to = "prob")
+datos_tidy
+```
+
+---
+
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+Para entender mejor los datos vamos a **.bg-purple_light[realizar un resumen de los datos]** calculando la **.bg-purple_light[media de probabilidad asignada]**
+
+```{r}
+datos_tidy %>% 
+  group_by(termino) %>% 
+  summarise(mean_prob = mean(prob)) %>% 
+  ungroup() %>% 
+  arrange(mean_prob)
+```
+
+
+---
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+Por último, para simplficar los gráficos, vamos a **.bg-purple_light[filtrar solo algunos términos]** (tras convertirlos a factor en función de su media de probabilidad con `fct_reorder()`)
+
+```{r}
+datos_final <-
+  datos_tidy %>% 
+  mutate(termino = fct_reorder(termino, prob, .fun = mean)) %>% 
+  filter(termino %in%
+           c("Almost No Chance", "Highly Unlikely", "Improbable",
+             "Probably Not", "About Even",
+             "We Believe", "Probably", "Highly Likely",
+             "Almost Certainly"))
+datos_final %>% count(termino)
+```
+
+---
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+.pull-left[
+
+```{r eval = FALSE}
+datos_resumen <-
+  datos_final %>%
+  group_by(termino) %>%
+  summarise(media = mean(prob))
+
+ggplot(datos_resumen,
+       aes(x = termino, y = media, fill = termino)) +
+  geom_col(alpha = 0.7) +
+  scale_fill_brewer(palette = "RdBu") +
+  labs(fill = "Términos",
+       y = "Probabilidad media (%)",
+       x = "Términos",
+       title = "Percepción de la probabilidad")
+```
+
+]
+
+
+.pull-right[
+
+```{r echo = FALSE}
+datos_resumen <-
+  datos_final %>%
+  group_by(termino) %>%
+  summarise(media = mean(prob))
+
+ggplot(datos_resumen,
+       aes(x = termino, y = media, fill = termino)) +
+  geom_col(alpha = 0.7) +
+  scale_fill_brewer(palette = "RdBu") +
+  labs(fill = "Términos",
+       y = "Probabilidad media (%)",
+       x = "Términos",
+       title = "Percepción de la probabilidad")
+```
+
+]
+  
+---
+
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
 
 Lo anterior es un diagrama de barras y hemos tenido que **.bg-purple_light[perder información]** por el camino (hemos tenido que resumir nuestros datos) dado que una diagrama de barras no nos permite visualizar una **.bg-purple_light[variable continua]**.
 
@@ -14621,7 +14729,7 @@ ggplot(data = datos,
 
 .pull-right[
 
-```{r echo = FALSE, out.width = "85%"}
+```{r echo = FALSE, out.width = "80%"}
 datos <- tibble("x" = rnorm(n = 10000, mean = 3, sd = 2))
 ggplot(data = datos, aes(x = x)) +
   geom_histogram() #<<
@@ -14641,16 +14749,16 @@ El argumento `bins = ...` nos servirá para personalizar el nímero de barras qu
 ```{r eval = FALSE}
 ggplot(data = datos,
        aes(x = x)) +
-  geom_histogram(bins = 10) #<<
+  geom_histogram(bins = 7) #<<
 ```
 
 ]
 
 .pull-right[
 
-```{r echo = FALSE, out.width = "85%"}
+```{r echo = FALSE, out.width = "95%"}
 ggplot(data = datos, aes(x = x)) +
-  geom_histogram(bins = 10)
+  geom_histogram(bins = 7)
 ```
 
 ]
@@ -14674,7 +14782,7 @@ ggplot(data = datos,
 
 .pull-right[
 
-```{r echo = FALSE, out.width = "85%"}
+```{r echo = FALSE, out.width = "95%"}
 ggplot(data = datos, aes(x = x)) +
   geom_histogram(bins = 50)
 ```
@@ -14688,13 +14796,13 @@ ggplot(data = datos, aes(x = x)) +
 
 .pull-left[
 
-Replica el siguiente gráfico (prepara los datos como consideres):
+Replica el siguiente gráfico:
 
 * Fuente: Roboto
 * Tamaño de título: 27
-* Alpha: 0.75
+* Alpha: 0.85
 * Paleta: `scale_fill_brewer(palette = "RdBu")`
-* Bins: `bins = 20`
+* Bins: `bins = 18`
 
 ]
 
@@ -14712,9 +14820,67 @@ theme_update(
 
 ggplot(datos_final,
        aes(x = prob, fill = termino)) +
-  geom_histogram(alpha = 0.75, bins = 20) +
+  geom_histogram(alpha = 0.85, bins = 18) +
   scale_fill_brewer(palette = "RdBu") +
-  facet_wrap(~termino, scale = "free_y") +
+  facet_wrap(~termino, scale = "free_y", nrow = 3) +
+  labs(y = "Frecuencia relativa (%)",
+       x = "Probabilidad (%)",
+       title = "Percepción de la probabilidad",
+       fill = "Términos")
+```
+
+]
+
+---
+
+# Variables .orange[continuas]: .green[HISTOGRAMA]
+
+
+.pull-left[
+
+
+```{r eval = FALSE}
+library(showtext)
+font_add_google(family = "Roboto",
+                name = "Roboto")
+showtext_auto()
+theme_set(theme_minimal(base_family = "Roboto"))
+theme_update(
+  plot.title = element_text(color = "black", face = "bold", size = 27),
+  legend.position = "bottom")
+
+ggplot(datos_final,
+       aes(x = prob, fill = termino)) +
+  geom_histogram(alpha = 0.85, bins = 18) +
+  scale_fill_brewer(palette = "RdBu") +
+  facet_wrap(~termino, scale = "free_y",
+             nrow = 3) +
+  labs(y = "Frecuencia relativa (%)",
+       x = "Probabilidad (%)",
+       title = "Percepción de la probabilidad",
+       fill = "Términos")
+```
+
+]
+
+
+.pull-right[
+
+
+```{r echo = FALSE}
+library(showtext)
+font_add_google(family = "Roboto", name = "Roboto")
+showtext_auto()
+theme_set(theme_minimal(base_family = "Roboto"))
+theme_update(
+  plot.title = element_text(color = "black", face = "bold", size = 27),
+  legend.position = "bottom")
+
+ggplot(datos_final,
+       aes(x = prob, fill = termino)) +
+  geom_histogram(alpha = 0.85, bins = 18) +
+  scale_fill_brewer(palette = "RdBu") +
+  facet_wrap(~termino, scale = "free_y", nrow = 3) +
   labs(y = "Frecuencia relativa (%)",
        x = "Probabilidad (%)",
        title = "Percepción de la probabilidad",
@@ -14732,7 +14898,7 @@ name: densidad
 
 .pull-left[
 
-Los histogramas en realidad son una **.bg-purple_light[aproximación discreta de los gráficos de densidad]** (asumiendo que los intervalos se pudieran ir haciendo tan pequeños como queramos, generado una curva continua). Las densidades mejoran la robustez al histograma. Para ello usaremos `geom_histogram()`
+Los histogramas en realidad son una **.bg-purple_light[aproximación discreta de los gráficos de densidad]** (asumiendo que los intervalos se pudieran ir haciendo tan pequeños como queramos, generado una curva continua). Las densidades mejoran la robustez al histograma. Para ello usaremos `geom_density()`
 
 ```{r eval = FALSE}
 datos <-
@@ -14740,9 +14906,10 @@ datos <-
                      mean = 3, sd = 2))
 ggplot(data = datos,
        aes(x = x)) +
-  geom_density(fill = "black", #<<
+  geom_density(fill = "red", #<<
                color = "black",#<<
-               alpha = 0.5) #<<
+               alpha = 0.2) + #<< 
+  theme_minimal()
 ```
 
 ]
@@ -14752,7 +14919,7 @@ ggplot(data = datos,
 ```{r echo = FALSE}
 datos <- tibble("x" = rnorm(n = 10000, mean = 3, sd = 2))
 ggplot(data = datos, aes(x = x)) +
-  geom_density(fill = "black", , alpha = 0.5,
+  geom_density(fill = "red", alpha = 0.2,
                color = "black")
 ```
 
@@ -14769,7 +14936,7 @@ Replica el siguiente gráfico (prepara los datos como consideres):
 
 * Fuente: Roboto
 * Tamaño de título: 27
-* Alpha: 0.3
+* Alpha: 0.5
 * Paleta: `scale_fill_brewer(palette = "RdBu")` y `scale_color_brewer(palette = "RdBu")`
 
 ]
@@ -14778,18 +14945,12 @@ Replica el siguiente gráfico (prepara los datos como consideres):
 
 
 ```{r echo = FALSE}
-library(showtext)
-font_add_google(family = "Roboto", name = "Roboto")
-showtext_auto()
-theme_set(theme_minimal(base_family = "Roboto"))
-theme_update(
-  plot.title = element_text(color = "black", face = "bold", size = 27),
-  legend.position = "bottom")
+# Hereda tema anterior
 
 ggplot(datos_final,
        aes(x = prob, color = termino,
            fill = termino)) +
-  geom_density(alpha = 0.3) +
+  geom_density(alpha = 0.5) +
   scale_fill_brewer(palette = "RdBu") +
   scale_color_brewer(palette = "RdBu") +
   guides(color = "none") +
@@ -14805,11 +14966,57 @@ ggplot(datos_final,
 
 # Variables .orange[continuas]: .green[DENSIDAD]
 
+.pull-left[
+
+```{r eval = FALSE}
+# hereda tema anterior
+
+ggplot(datos_final,
+       aes(x = prob, color = termino,
+           fill = termino)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
+  guides(color = "none") +
+  labs(y = "Frecuencia relativa (%)",
+       x = "Probabilidad (%)",
+       title = "Percepción de la probabilidad",
+       fill = "Términos")
+```
+
+]
+
+.pull-right[
+
+
+```{r echo = FALSE}
+ggplot(datos_final,
+       aes(x = prob, color = termino,
+           fill = termino)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
+  guides(color = "none") +
+  labs(y = "Frecuencia relativa (%)",
+       x = "Probabilidad (%)",
+       title = "Percepción de la probabilidad",
+       fill = "Términos")
+```
+
+]
+
+---
+
+
+# Variables .orange[continuas]: .green[DENSIDAD]
+
 A veces puede ser interesante **.bg-purple_light[superponer las densidades]**, lo cual lo podemos hacer con `geom_density_ridges()`, del paquete `{ggridges}`.
 
 .pull-left[
 
 ```{r eval = FALSE}
+# hereda tema anterior
+
 library(ggridges)
 ggplot(datos_final,
        aes(x = prob, y = termino, #<<
@@ -14855,16 +15062,10 @@ Una opción muy habitual en variables continuas son los **.bg-purple_light[gráf
 
 .pull-left[
 
-* **.bg-purple_light[Caja]**: lados inferior y superior representan el **.bg-purple_light[primer y tercer cuartil]**. La **.bg-purple_light[altura]** de la caja es el **.bg-purple_light[rango intercuartílico]** 
-
-* **.bg-purple_light[Línea]**: la línea gruesa que divide la caja marca la **.bg-purple_light[mediana]**.
-
-* **.bg-purple_light[Bigotes]**: las líneas (bigotes) que salen de las cajas llegan hasta el primer/último dato que no supere 1.5 veces el rango intercuartílico. Los **.bg-purple_light[puntos alejados representan los datos atípicos]** o outliers.
-
 ```{r eval = FALSE}
 ggplot(datos_final,
        aes(x = termino, y = prob, fill = termino)) +
-  geom_boxplot(alpha = 0.7) +
+  geom_boxplot(alpha = 0.5) +
   scale_fill_brewer(palette = "RdBu") +
   labs(fill = "Términos",
        y = "Probabilidad (%)",
@@ -14876,10 +15077,10 @@ ggplot(datos_final,
 
 .pull-right[
 
-```{r echo = FALSE}
+```{r echo = FALSE, out.width = "90%"}
 ggplot(datos_final,
        aes(x = termino, y = prob, fill = termino)) +
-  geom_boxplot(alpha = 0.7) +
+  geom_boxplot(alpha = 0.5) +
   scale_fill_brewer(palette = "RdBu") +
   labs(fill = "Términos",
        y = "Probabilidad (%)",
@@ -14895,16 +15096,19 @@ ggplot(datos_final,
 
 .pull-left[
 
-Dado que el resumen a veces puede ser insuficiente, podemos usar `geom_jitter()`, que nos añadirá los puntos como una especie de **.bg-purple_light[«gotelé aleatorio»]**
+El resumen a veces puede ser insuficiente, podemos usar `geom_jitter()`, que nos añadirá puntos como un **.bg-purple_light[«gotelé aleatorio»]**
 
 Ver <https://hausetutorials.netlify.app/posts/2019-02-22-why-we-should-never-use-barplots-use-geomquasirandom-instead/>
 
 ```{r eval = FALSE}
 ggplot(datos_final,
-       aes(x = termino, y = prob, fill = termino)) +
-  geom_boxplot(alpha = 0.7) +
+       aes(x = termino, y = prob,
+           fill = termino,
+           color = termino)) +
+  geom_boxplot(alpha = 0.5) +
   geom_jitter(alpha = 0.25, size = 2) +#<<
   scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
   labs(fill = "Términos",
        y = "Probabilidad (%)",
        x = "Términos",
@@ -14917,10 +15121,12 @@ ggplot(datos_final,
 
 ```{r echo = FALSE}
 ggplot(datos_final,
-       aes(x = termino, y = prob, fill = termino)) +
-  geom_boxplot(alpha = 0.7) +
+       aes(x = termino, y = prob, color = termino,
+           fill = termino)) +
+  geom_boxplot(alpha = 0.5) +
   geom_jitter(alpha = 0.25, size = 2) +
   scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
   labs(fill = "Términos",
        y = "Probabilidad (%)",
        x = "Términos",
@@ -14935,7 +15141,7 @@ ggplot(datos_final,
 
 .pull-left[
 
-Podemos mejorar el **.bg-purple_light[«gotelé aleatorio»]** con  `geom_quasirandom()` del paquete `{ggbeeswarm}`
+Podemos mejorar el **.bg-purple_light[«gotelé aleatorio»]** con  `geom_quasirandom()` del paquete `{ggbeeswarm}` (con `width = ...` controlamos la anchura de lo aleatorio)
 
 
 ```{r eval = FALSE}
@@ -14943,10 +15149,10 @@ library(ggbeeswarm)
 ggplot(datos_final,
        aes(x = termino, y = prob,
            fill = termino, color = termino)) +
-  geom_boxplot(alpha = 0.7) +
+  geom_boxplot(alpha = 0.5) +
   geom_quasirandom(size = 2,
                    alpha = 0.4,
-                   width = .5) +
+                   width = 0.5) +
   scale_fill_brewer(palette = "RdBu") +
   scale_color_brewer(palette = "RdBu") +
   guides(color = "none") +
@@ -14965,10 +15171,10 @@ library(ggbeeswarm)
 ggplot(datos_final,
        aes(x = termino, y = prob,
            fill = termino, color = termino)) +
-  geom_boxplot(alpha = 0.7) +
+  geom_boxplot(alpha = 0.5) +
   geom_quasirandom(size = 2,
                    alpha = 0.4,
-                   width = .5) +
+                   width = 0.5) +
   scale_fill_brewer(palette = "RdBu") +
   scale_color_brewer(palette = "RdBu") +
   guides(color = "none") +
@@ -14994,9 +15200,13 @@ Para solventar los problemas de los box-plots, una alternativa muy popular son l
 library(ggbeeswarm)
 ggplot(datos_final,
        aes(x = termino, y = prob,
-           fill = termino)) +
-  geom_violin(alpha = 0.4) +
+           fill = termino, color = termino)) +
+  geom_violin(alpha = 0.5,
+              scale = "count",
+              bw = 1.2) +
   scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
+  guides(color = "none") +
   labs(fill = "Términos",
        y = "Probabilidad (%)",
        x = "Términos",
@@ -15011,9 +15221,13 @@ ggplot(datos_final,
 library(ggbeeswarm)
 ggplot(datos_final,
        aes(x = termino, y = prob,
-           fill = termino)) +
-  geom_violin(alpha = 0.4) +
+           fill = termino, color = termino)) +
+  geom_violin(alpha = 0.5,
+              scale = "count",
+              bw = 1.2) +
   scale_fill_brewer(palette = "RdBu") +
+  scale_color_brewer(palette = "RdBu") +
+  guides(color = "none") +
   labs(fill = "Términos",
        y = "Probabilidad (%)",
        x = "Términos",
@@ -15021,15 +15235,6 @@ ggplot(datos_final,
 ```
 
 ]
-
-
----
-
-# Variables .orange[continuas]: .green[RAINCLOUD]
-
-También son muy buena alternativa los **.bg-purple_light[raincloud plots]**, visualizando a la vez los datos y un resumen de los mismos.
-
-<https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-05-07>
 
 ---
 
